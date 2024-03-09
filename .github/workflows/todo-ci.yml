@@ -23,7 +23,7 @@ jobs:
       uses: mr-smithers-excellent/docker-build-push@v6
       with:
         image: sbsarnava/todo-java
-        tags: latest
+        tags: latest-${{ github.sha }}
         registry: docker.io
         dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
