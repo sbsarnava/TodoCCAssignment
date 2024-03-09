@@ -27,7 +27,7 @@ jobs:
       uses: mr-smithers-excellent/docker-build-push@v6
       with:
         image: sbsarnava/todo-java
-        tags: latest
+        tags: latest-${{ github.sha }}
         registry: docker.io
         dockerfile: Dockerfile
         username: ${{ secrets.DOCKER_USERNAME }}
@@ -48,4 +48,4 @@ jobs:
         app-name: 'todo-java'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_2a1073f681ba40eda58d2e2a44bed023 }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_c5440f17954846419f4fc4f149115aba }}/sbsarnava/todo-java:${{ github.sha }}'
+        images: 'index.docker.io/sbsarnava/todo-java:latest-${{ github.sha }}'
