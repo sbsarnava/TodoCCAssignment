@@ -10,6 +10,10 @@ import lombok.AllArgsConstructor;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.catalina.connector.Response;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,18 +28,32 @@ public class TodoController {
     private final TodoRepository todoRepo;
 
     @GetMapping("")
-    public List<Todo> getMethodName() {
-        return todoRepo.findAll();
+    public ResponseEntity<List<Todo>> getAllTodo() {
+        return new ResponseEntity<>(todoRepo.findAll(), HttpStatus.OK);
     }
 
     @PostMapping("")
-    public Todo postMethodName(@RequestBody Todo todo) {
-        return todoRepo.save(todo);
+    public ResponseEntity<Todo> createTodo(@RequestBody Todo todo) {
+        Todo newTodo = Todo.builder().description(todo.getDescription()).title(todo.getTitle()).build();
+        newTodo = todoRepo.save(newTodo);
+        return new ResponseEntity<>(newTodo, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public Optional<Todo> getMethodName(@PathVariable Long id) {
-        return todoRepo.findById(id);
+    public ResponseEntity<Todo> getTodo(@PathVariable Long id) {
+        Optional<Todo> todo = (Optional<Todo>) todoRepo.findById(id);
+        if (todo.isPresent()) {
+            return new ResponseEntity<>(todo.get(), HttpStatus.OK);
+
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteTodo(@PathVariable Long id) {
+        todoRepo.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
